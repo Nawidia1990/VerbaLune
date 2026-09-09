@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each signed-in user can only read/write their own document,
+    // stored at users/{their own uid}. No one can read or write
+    // anyone else's data, and signed-out requests are rejected entirely.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
